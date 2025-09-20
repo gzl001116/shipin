@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>带广告的视频播放器</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .ad-container {
+            position: relative;
+            width: 100%;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .ad-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        .skip-ad-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+            display: none;
+        }
+        
+        .skip-ad-button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .ad-countdown {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        .video-controls {
+            background-color: #34495e;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        #playPauseBtn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #playPauseBtn:hover {
+            background-color: #2980b9;
+        }
+        
+        #volumeControl {
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .video-list {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .video-list h2 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .video-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .video-item {
+            cursor: pointer;
+            transition: transform 0.3s;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .video-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .video-item p {
+            padding: 0.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>带广告的视频播放器</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="player-with-ads.html">广告播放器</a></li>
+                <li><a href="#videos">视频库</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <div class="ad-container">
+                <div class="ad-overlay" id="adOverlay">广告</div>
+                <div class="ad-countdown" id="adCountdown">广告剩余: 5s</div>
+                <button class="skip-ad-button" id="skipAdButton">跳过广告</button>
+                
+                <video id="videoPlayer" width="100%" height="500">
+                    <source src="videos/ad.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+                
+                <div class="video-controls">
+                    <button id="mainPlayPauseBtn">播放</button>
+                    <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+                    <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                </div>
+            </div>
+            
+            <div class="video-list">
+                <h2>视频库</h2>
+                <div class="video-thumbnails">
+                    <div class="video-item" data-type="ad" data-src="videos/ad.mp4">
+                        <img src="images/ad-thumb.jpg" alt="广告视频">
+                        <p>广告视频</p>
+                    </div>
+                    <div class="video-item" data-type="main" data-src="videos/sample.mp4">
+                        <img src="images/thumb1.jpg" alt="主视频1">
+                        <p>主视频1</p>
+                    </div>
+                    <div class="video-item" data-type="main" data-src="videos/sample2.mp4">
+                        <img src="images/thumb2.jpg" alt="主视频2">
+                        <p>主视频2</p>
+                    </div>
+                    <div class="video-item" data-type="main" data-src="videos/sample3.mp4">
+                        <img src="images/thumb3.jpg" alt="主视频3">
+                        <p>主视频3</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 带广告的视频播放器. 保留所有权利。</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取视频播放器元素
+            const videoPlayer = document.getElementById('videoPlayer');
+            const mainPlayPauseBtn = document.getElementById('mainPlayPauseBtn');
+            const volumeControl = document.getElementById('volumeControl');
+            const currentTimeElement = document.getElementById('currentTime');
+            const durationElement = document.getElementById('duration');
+            const videoItems = document.querySelectorAll('.video-item');
+            
+            // 广告相关元素
+            const adOverlay = document.getElementById('adOverlay');
+            const adCountdown = document.getElementById('adCountdown');
+            const skipAdButton = document.getElementById('skipAdButton');
+            
+            // 播放状态
+            let isAdPlaying = true;
+            let adDuration = 5; // 广告时长（秒）
+            let adTimer = adDuration;
+            let adInterval;
+            
+            // 格式化时间显示
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // 更新时间显示
+            function updateTimeDisplay() {
+                currentTimeElement.textContent = formatTime(videoPlayer.currentTime);
+                if (!isNaN(videoPlayer.duration)) {
+                    durationElement.textContent = formatTime(videoPlayer.duration);
+                }
+            }
+            
+            // 更新广告倒计时
+            function updateAdCountdown() {
+                adCountdown.textContent = `广告剩余: ${adTimer}s`;
+                if (adTimer <= 0) {
+                    skipAdButton.style.display = 'block';
+                    clearInterval(adInterval);
+                }
+            }
+            
+            // 开始广告倒计时
+            function startAdCountdown() {
+                adTimer = adDuration;
+                updateAdCountdown();
+                adInterval = setInterval(function() {
+                    adTimer--;
+                    updateAdCountdown();
+                    if (adTimer <= 0) {
+                        clearInterval(adInterval);
+                    }
+                }, 1000);
+            }
+            
+            // 切换到主视频
+            function switchToMainVideo(videoSrc) {
+                isAdPlaying = false;
+                adOverlay.style.display = 'none';
+                adCountdown.style.display = 'none';
+                skipAdButton.style.display = 'none';
+                
+                videoPlayer.src = videoSrc;
+                videoPlayer.load();
+                videoPlayer.play();
+                mainPlayPauseBtn.textContent = '暂停';
+                
+                clearInterval(adInterval);
+            }
+            
+            // 播放/暂停按钮功能
+            mainPlayPauseBtn.addEventListener('click', function() {
+                if (videoPlayer.paused) {
+                    videoPlayer.play();
+                    mainPlayPauseBtn.textContent = '暂停';
+                } else {
+                    videoPlayer.pause();
+                    mainPlayPauseBtn.textContent = '播放';
+                }
+            });
+            
+            // 音量控制功能
+            volumeControl.addEventListener('input', function() {
+                videoPlayer.volume = volumeControl.value;
+            });
+            
+            // 视频时间更新事件
+            videoPlayer.addEventListener('timeupdate', updateTimeDisplay);
+            
+            // 视频加载完成事件
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                durationElement.textContent = formatTime(videoPlayer.duration);
+            });
+            
+            // 视频播放完成事件
+            videoPlayer.addEventListener('ended', function() {
+                if (isAdPlaying) {
+                    // 广告播放完成后切换到主视频
+                    switchToMainVideo('videos/sample.mp4');
+                } else {
+                    mainPlayPauseBtn.textContent = '播放';
+                }
+            });
+            
+            // 跳过广告按钮
+            skipAdButton.addEventListener('click', function() {
+                switchToMainVideo('videos/sample.mp4');
+            });
+            
+            // 视频列表点击事件
+            videoItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const videoType = this.getAttribute('data-type');
+                    const videoSrc = this.getAttribute('data-src');
+                    
+                    if (videoType === 'ad') {
+                        // 播放广告
+                        isAdPlaying = true;
+                        adOverlay.style.display = 'block';
+                        adCountdown.style.display = 'block';
+                        skipAdButton.style.display = 'none';
+                        
+                        videoPlayer.src = videoSrc;
+                        videoPlayer.load();
+                        videoPlayer.play();
+                        mainPlayPauseBtn.textContent = '暂停';
+                        
+                        startAdCountdown();
+                    } else {
+                        // 播放主视频
+                        switchToMainVideo(videoSrc);
+                    }
+                });
+            });
+            
+            // 初始化时间显示
+            updateTimeDisplay();
+            
+            // 初始化广告倒计时
+            startAdCountdown();
+        });
+    </script>
+</body>
+</html>

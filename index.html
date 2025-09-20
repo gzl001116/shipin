@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频播放器</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>视频播放器</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">首页</a></li>
+                <li><a href="#videos">视频库</a></li>
+                <li><a href="#about">关于我们</a></li>
+                <li><a href="#contact">联系方式</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <div class="player-container">
+                <video id="videoPlayer" controls>
+                    <source src="videos/sample.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+                <div class="video-controls">
+                    <button id="playPauseBtn">播放</button>
+                    <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+                    <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                </div>
+            </div>
+            
+            <div class="video-list">
+                <h2>推荐视频</h2>
+                <div class="video-thumbnails">
+                    <div class="video-item" data-src="videos/sample.mp4">
+                        <img src="images/thumb1.jpg" alt="示例视频1">
+                        <p>示例视频1</p>
+                    </div>
+                    <div class="video-item" data-src="videos/sample2.mp4">
+                        <img src="images/thumb2.jpg" alt="示例视频2">
+                        <p>示例视频2</p>
+                    </div>
+                    <div class="video-item" data-src="videos/sample3.mp4">
+                        <img src="images/thumb3.jpg" alt="示例视频3">
+                        <p>示例视频3</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="content-section">
+            <h2>关于我们</h2>
+            <p>这是一个现代化的视频播放器网站，提供高质量的视频播放体验。</p>
+        </section>
+
+        <section id="contact" class="content-section">
+            <h2>联系我们</h2>
+            <p>如有任何问题，请通过以下方式联系我们：</p>
+            <ul>
+                <li>邮箱: contact@example.com</li>
+                <li>电话: +86 123 4567 8900</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 视频播放器. 保留所有权利。</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

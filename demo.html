@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频播放器演示</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .feature-demo {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .feature-demo h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .custom-player {
+            width: 100%;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .custom-controls {
+            background-color: #34495e;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .slider {
+            width: 100px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background-color: #555;
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #3498db;
+            width: 0%;
+        }
+        
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .speed-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .speed-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .active-speed {
+            background-color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>视频播放器演示</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="demo.html">功能演示</a></li>
+                <li><a href="#basic">基础功能</a></li>
+                <li><a href="#advanced">高级功能</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="demo-container">
+        <div class="feature-demo">
+            <h2 id="basic">基础播放功能</h2>
+            <p>这是一个具备基础播放控制功能的视频播放器演示：</p>
+            
+            <div class="custom-player">
+                <video id="basicVideo" width="100%" height="400">
+                    <source src="videos/sample.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+                <div class="custom-controls">
+                    <div class="control-group">
+                        <button id="basicPlayPause" class="btn">播放</button>
+                        <button id="basicStop" class="btn">停止</button>
+                    </div>
+                    <div class="control-group">
+                        <span>音量:</span>
+                        <input type="range" id="basicVolume" class="slider" min="0" max="1" step="0.1" value="1">
+                    </div>
+                    <div class="control-group">
+                        <span class="time-display">
+                            <span id="basicCurrentTime">00:00</span> / <span id="basicDuration">00:00</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="progress-container" id="basicProgressContainer">
+                    <div class="progress-bar" id="basicProgressBar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="feature-demo">
+            <h2 id="advanced">高级播放功能</h2>
+            <p>这是一个具备高级播放控制功能的视频播放器演示：</p>
+            
+            <div class="custom-player">
+                <video id="advancedVideo" width="100%" height="400">
+                    <source src="videos/sample.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+                <div class="custom-controls">
+                    <div class="control-group">
+                        <button id="advancedPlayPause" class="btn">播放</button>
+                        <button id="advancedStop" class="btn">停止</button>
+                    </div>
+                    <div class="control-group">
+                        <span>音量:</span>
+                        <input type="range" id="advancedVolume" class="slider" min="0" max="1" step="0.1" value="1">
+                    </div>
+                    <div class="control-group">
+                        <span>速度:</span>
+                        <div class="speed-controls">
+                            <button class="btn speed-btn active-speed" data-speed="0.5">0.5x</button>
+                            <button class="btn speed-btn" data-speed="1">1x</button>
+                            <button class="btn speed-btn" data-speed="1.5">1.5x</button>
+                            <button class="btn speed-btn" data-speed="2">2x</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <button id="fullscreenBtn" class="btn">全屏</button>
+                    </div>
+                </div>
+                <div class="progress-container" id="advancedProgressContainer">
+                    <div class="progress-bar" id="advancedProgressBar"></div>
+                </div>
+                <div class="custom-controls">
+                    <div class="control-group">
+                        <span class="time-display">
+                            <span id="advancedCurrentTime">00:00</span> / <span id="advancedDuration">00:00</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="feature-demo">
+            <h2 id="ads">广告播放功能</h2>
+            <p>这是一个模拟YouTube风格的广告播放系统演示：</p>
+            
+            <div class="custom-player">
+                <div style="position: relative;">
+                    <video id="adVideo" width="100%" height="400">
+                        <source src="videos/ad.mp4" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
+                    <div style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.7); color: white; padding: 5px 10px; border-radius: 4px; font-size: 14px;">
+                        广告
+                    </div>
+                    <div id="adCountdown" style="position: absolute; bottom: 10px; left: 10px; background-color: rgba(0, 0, 0, 0.7); color: white; padding: 5px 10px; border-radius: 4px; font-size: 14px;">
+                        广告剩余: 5s
+                    </div>
+                    <button id="skipAdButton" style="position: absolute; bottom: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.7); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; display: none;">
+                        跳过广告
+                    </button>
+                </div>
+                <div class="custom-controls">
+                    <div class="control-group">
+                        <button id="adPlayPause" class="btn">播放</button>
+                        <button id="switchToMain" class="btn">切换到主视频</button>
+                    </div>
+                    <div class="control-group">
+                        <span>音量:</span>
+                        <input type="range" id="adVolume" class="slider" min="0" max="1" step="0.1" value="1">
+                    </div>
+                </div>
+                <div class="progress-container" id="adProgressContainer">
+                    <div class="progress-bar" id="adProgressBar"></div>
+                </div>
+                <div class="custom-controls">
+                    <div class="control-group">
+                        <span class="time-display">
+                            <span id="adCurrentTime">00:00</span> / <span id="adDuration">00:00</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 视频播放器演示. 保留所有权利。</p>
+    </footer>
+
+    <script>
+        // 基础播放器功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 基础播放器元素
+            const basicVideo = document.getElementById('basicVideo');
+            const basicPlayPause = document.getElementById('basicPlayPause');
+            const basicStop = document.getElementById('basicStop');
+            const basicVolume = document.getElementById('basicVolume');
+            const basicCurrentTime = document.getElementById('basicCurrentTime');
+            const basicDuration = document.getElementById('basicDuration');
+            const basicProgressContainer = document.getElementById('basicProgressContainer');
+            const basicProgressBar = document.getElementById('basicProgressBar');
+            
+            // 高级播放器元素
+            const advancedVideo = document.getElementById('advancedVideo');
+            const advancedPlayPause = document.getElementById('advancedPlayPause');
+            const advancedStop = document.getElementById('advancedStop');
+            const advancedVolume = document.getElementById('advancedVolume');
+            const advancedCurrentTime = document.getElementById('advancedCurrentTime');
+            const advancedDuration = document.getElementById('advancedDuration');
+            const advancedProgressContainer = document.getElementById('advancedProgressContainer');
+            const advancedProgressBar = document.getElementById('advancedProgressBar');
+            const speedButtons = document.querySelectorAll('.speed-btn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            
+            // 广告播放器元素
+            const adVideo = document.getElementById('adVideo');
+            const adPlayPause = document.getElementById('adPlayPause');
+            const switchToMain = document.getElementById('switchToMain');
+            const adVolume = document.getElementById('adVolume');
+            const adCurrentTime = document.getElementById('adCurrentTime');
+            const adDuration = document.getElementById('adDuration');
+            const adProgressContainer = document.getElementById('adProgressContainer');
+            const adProgressBar = document.getElementById('adProgressBar');
+            const adCountdown = document.getElementById('adCountdown');
+            const skipAdButton = document.getElementById('skipAdButton');
+            
+            // 格式化时间
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // 基础播放器功能
+            basicPlayPause.addEventListener('click', function() {
+                if (basicVideo.paused) {
+                    basicVideo.play();
+                    basicPlayPause.textContent = '暂停';
+                } else {
+                    basicVideo.pause();
+                    basicPlayPause.textContent = '播放';
+                }
+            });
+            
+            basicStop.addEventListener('click', function() {
+                basicVideo.pause();
+                basicVideo.currentTime = 0;
+                basicPlayPause.textContent = '播放';
+            });
+            
+            basicVolume.addEventListener('input', function() {
+                basicVideo.volume = basicVolume.value;
+            });
+            
+            basicVideo.addEventListener('timeupdate', function() {
+                basicCurrentTime.textContent = formatTime(basicVideo.currentTime);
+                if (!isNaN(basicVideo.duration)) {
+                    const progressPercent = (basicVideo.currentTime / basicVideo.duration) * 100;
+                    basicProgressBar.style.width = `${progressPercent}%`;
+                }
+            });
+            
+            basicVideo.addEventListener('loadedmetadata', function() {
+                basicDuration.textContent = formatTime(basicVideo.duration);
+            });
+            
+            basicProgressContainer.addEventListener('click', function(e) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                const duration = basicVideo.duration;
+                
+                basicVideo.currentTime = (clickX / width) * duration;
+            });
+            
+            // 高级播放器功能
+            advancedPlayPause.addEventListener('click', function() {
+                if (advancedVideo.paused) {
+                    advancedVideo.play();
+                    advancedPlayPause.textContent = '暂停';
+                } else {
+                    advancedVideo.pause();
+                    advancedPlayPause.textContent = '播放';
+                }
+            });
+            
+            advancedStop.addEventListener('click', function() {
+                advancedVideo.pause();
+                advancedVideo.currentTime = 0;
+                advancedPlayPause.textContent = '播放';
+            });
+            
+            advancedVolume.addEventListener('input', function() {
+                advancedVideo.volume = advancedVolume.value;
+            });
+            
+            advancedVideo.addEventListener('timeupdate', function() {
+                advancedCurrentTime.textContent = formatTime(advancedVideo.currentTime);
+                if (!isNaN(advancedVideo.duration)) {
+                    const progressPercent = (advancedVideo.currentTime / advancedVideo.duration) * 100;
+                    advancedProgressBar.style.width = `${progressPercent}%`;
+                }
+            });
+            
+            advancedVideo.addEventListener('loadedmetadata', function() {
+                advancedDuration.textContent = formatTime(advancedVideo.duration);
+            });
+            
+            advancedProgressContainer.addEventListener('click', function(e) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                const duration = advancedVideo.duration;
+                
+                advancedVideo.currentTime = (clickX / width) * duration;
+            });
+            
+            // 速度控制
+            speedButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const speed = parseFloat(this.getAttribute('data-speed'));
+                    advancedVideo.playbackRate = speed;
+                    
+                    // 更新激活状态
+                    speedButtons.forEach(btn => btn.classList.remove('active-speed'));
+                    this.classList.add('active-speed');
+                });
+            });
+            
+            // 全屏功能
+            fullscreenBtn.addEventListener('click', function() {
+                if (advancedVideo.requestFullscreen) {
+                    advancedVideo.requestFullscreen();
+                } else if (advancedVideo.mozRequestFullScreen) {
+                    advancedVideo.mozRequestFullScreen();
+                } else if (advancedVideo.webkitRequestFullscreen) {
+                    advancedVideo.webkitRequestFullscreen();
+                } else if (advancedVideo.msRequestFullscreen) {
+                    advancedVideo.msRequestFullscreen();
+                }
+            });
+            
+            // 广告播放器功能
+            let adTimer = 5;
+            let adInterval;
+            
+            function updateAdCountdown() {
+                adCountdown.textContent = `广告剩余: ${adTimer}s`;
+                if (adTimer <= 0) {
+                    skipAdButton.style.display = 'block';
+                }
+            }
+            
+            function startAdCountdown() {
+                adTimer = 5;
+                updateAdCountdown();
+                skipAdButton.style.display = 'none';
+                
+                adInterval = setInterval(function() {
+                    adTimer--;
+                    updateAdCountdown();
+                    if (adTimer <= 0) {
+                        clearInterval(adInterval);
+                    }
+                }, 1000);
+            }
+            
+            adPlayPause.addEventListener('click', function() {
+                if (adVideo.paused) {
+                    adVideo.play();
+                    adPlayPause.textContent = '暂停';
+                    startAdCountdown();
+                } else {
+                    adVideo.pause();
+                    adPlayPause.textContent = '播放';
+                }
+            });
+            
+            switchToMain.addEventListener('click', function() {
+                adVideo.src = 'videos/sample.mp4';
+                adVideo.load();
+                adVideo.play();
+                adPlayPause.textContent = '暂停';
+                clearInterval(adInterval);
+                adCountdown.style.display = 'none';
+                skipAdButton.style.display = 'none';
+            });
+            
+            adVolume.addEventListener('input', function() {
+                adVideo.volume = adVolume.value;
+            });
+            
+            adVideo.addEventListener('timeupdate', function() {
+                adCurrentTime.textContent = formatTime(adVideo.currentTime);
+                if (!isNaN(adVideo.duration)) {
+                    const progressPercent = (adVideo.currentTime / adVideo.duration) * 100;
+                    adProgressBar.style.width = `${progressPercent}%`;
+                }
+            });
+            
+            adVideo.addEventListener('loadedmetadata', function() {
+                adDuration.textContent = formatTime(adVideo.duration);
+            });
+            
+            adProgressContainer.addEventListener('click', function(e) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                const duration = adVideo.duration;
+                
+                adVideo.currentTime = (clickX / width) * duration;
+            });
+            
+            skipAdButton.addEventListener('click', function() {
+                switchToMain.click();
+            });
+        });
+    </script>
+</body>
+</html>
